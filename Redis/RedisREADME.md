@@ -41,6 +41,7 @@ Please input mask(numbers): 24
 ```
 ---
 ## Redis Cluster
+- 适配于CentOS7.6
 ```bash
 cd /opt/redis_cluster
 ./Redis_Cluster_Install.sh 
