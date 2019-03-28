@@ -1,4 +1,4 @@
-### Zookeeper伪集群
+## Zookeeper伪集群
 - 适配于CentOS7.6
 ```bash
 cd /opt/Zookeeper_Pseudo_Cluster
@@ -24,7 +24,7 @@ success
 *-----zookeeper节点3启动成功-----* 
 ```
 ---
-### Zookeeper集群
+## Zookeeper集群
 - 适配于CentOS7.6
 ```bash
 cd /opt/Zookeeper_Cluster
