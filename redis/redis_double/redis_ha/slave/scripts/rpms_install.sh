@@ -1,7 +1,7 @@
 #!/bin/bash
 #*****************************************************************************************
 # Filename: pms_install.sh
-# Create by: liumanlin@zhizhangyi.com
+# Create by: mrlapulga@126.com
 # Create Data: 2019-03-21
 # Usage: source rpms_install.sh
 # Version: v1.0

@@ -1,7 +1,7 @@
 #!/bin/bash
 #*****************************************************************************************
 # Filename: master_install.sh
-# Create by: liumanlin@zhizhangyi.com
+# Create by: mrlapulga@126.com
 # Create Data: 2019-03-21
 # Usage: sh master_install.sh
 # Version: v1.0

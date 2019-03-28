@@ -1,7 +1,7 @@
 #!/bin/bash
 #*****************************************************************************************
 # Filename: config.sh
-# Create by: liumanlin@zhizhangyi.com
+# Create by: mrlapulga@126.com
 # Create Data: 2019-03-21
 # Usage: source config.sh
 # Version: v1.0

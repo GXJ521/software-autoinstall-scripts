@@ -1,7 +1,7 @@
 #!/bin/bash
 #*****************************************************************************************
 # Filename: system_option.sh
-# Create by: liumanlin@zhizhangyi.com
+# Create by: mrlapulga@126.com
 # Create Data: 2019-03-13
 # Usage: source system_option.sh
 # Version: v1.0

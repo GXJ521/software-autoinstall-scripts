@@ -1,7 +1,7 @@
 #!/bin/bash
 #*****************************************************************************************
 # Filename: redis_fault.sh
-# Create by: liumanlin@zhizhangyi.com
+# Create by: mrlapulga@126.com
 # Create Data: 2019-03-15
 # Usage: sh redis_fault.sh
 # Version: v1.0

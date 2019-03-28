@@ -1,7 +1,7 @@
 #!/bin/bash
 #*****************************************************************************************
 # Filename: Redis_Cluster_Install.sh
-# Create by: liumanlin@zhizhangyi.com
+# Create by: mrlapulga@126.com
 # Create Data: 2019-03-25
 # Usage: sh Redis_Cluster_Install.sh
 # Version: v1.0
