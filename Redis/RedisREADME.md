@@ -1,6 +1,7 @@
 ## Redis Double
+- 适配于CentOS7.6
 ```bash
-cd /opt
+cd /opt/redis_double
 ./redisha_install.sh 
 create public key ,please input slave host ip: 192.168.3.176
 Generating public/private rsa key pair.
