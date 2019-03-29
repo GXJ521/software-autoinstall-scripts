@@ -1,7 +1,5 @@
 ## Git命令
 
----
-
 ### 1. 基本命令
 ```bash
 git init
@@ -25,8 +23,6 @@ git pull --rebase origin master
     # 解决远程库与本地库不一致导致错误.
 git push origin master
     # 推送本地库到远程库.
-```
-```bash
 # 例如：
 cd Workspace
 mkdir Front-end
@@ -43,8 +39,6 @@ git rm -r --cached .
     # 删除本地缓存.
 git push -u origin master -f
     # 强制push，远程仓库可能会丢失数据.
-```
-```bash
 # 例如：
 git rm -r --cached .idea
     #--cached不会把本地的.idea删除
