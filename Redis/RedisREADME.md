@@ -1,5 +1,5 @@
 ## Redis Double
-- 适配于CentOS7.6,其他操作系统在暂时未测试。
+- 适配于CentOS7.6，其他操作系统暂时未测试。
 ```bash
 cd /opt/redis_double
 ./redisha_install.sh 
