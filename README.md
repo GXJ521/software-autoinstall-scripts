@@ -1,7 +1,7 @@
 ## 运维开发
 
 **软件自动安装脚本**
-- [Redis](https://github.com/mrlapulga/DevOps/blob/master/redis/RedisREADME.md)
+- [Redis](https://github.com/mrlapulga/DevOps/blob/master/Redis/RedisREADME.md)
 - [Zookeeper](https://github.com/mrlapulga/DevOps/blob/master/Zookeeper/ZookeeperREADME.md)
 
 **软件使用详解**
