@@ -7,6 +7,9 @@
 # Version: v1.0
 #*****************************************************************************************
 
+# 安装依赖
+yum install libaio -y
+
 # 下载解压创建目录
 curl -o /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz http://file.mrlapulga.com/Mysql/software/generic/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
 tar -zxf /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz -C /opt
@@ -202,6 +205,10 @@ ssl-key = /opt/mysql/ca-pem/server-key.pem
 [client]
 socket                              = /data/mysql/mysql.sock
 EOF
+
+# 创建用户
+groupadd mysql
+useradd -r -g mysql -s /bin/false mysql
 
 # 赋予所属组
 chown -R mysql.mysql /opt/mysql/
