@@ -17,7 +17,7 @@ ln -sv /opt/mysql-5.7.24-linux-glibc2.12-x86_64 /opt/mysql
 mkdir -p /data/mysql
 mkdir -p /opt/mysql/ca-pem/
 
-cat /data/mysql/init_file.sql <<EOF
+cat >> /data/mysql/init_file.sql <<EOF
 set global sql_safe_updates=0;
 set global sql_select_limit=50000;
 EOF
@@ -30,7 +30,7 @@ chmod 755 /etc/init.d/mysqld
 
 # 创建配置文件
 rm -f /etc/my.cnf
-cat /etc/my.cnf <<EOF
+cat >> /etc/my.cnf <<EOF
 [mysqld]
 #************** basic ***************
 datadir                             = /data/mysql
