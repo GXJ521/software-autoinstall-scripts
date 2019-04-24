@@ -15,12 +15,6 @@ curl -o /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz http://file.mrlapulga.co
 tar -zxf /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz -C /opt
 ln -sv /opt/mysql-5.7.24-linux-glibc2.12-x86_64 /opt/mysql
 mkdir -p /data/mysql
-mkdir -p /opt/mysql/ca-pem/
-
-cat >> /data/mysql/init_file.sql <<EOF
-set global sql_safe_updates=0;
-set global sql_select_limit=50000;
-EOF
 
 # 修改启动脚本
 sed -i '46s#basedir=#basedir=/opt/mysql#' /opt/mysql/support-files/mysql.server
@@ -217,16 +211,26 @@ chown -R mysql.mysql /etc/my.cnf
 chown -R mysql.mysql /etc/init.d/mysqld
 
 # 初始化
-/opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql | tee -a /data/mysql/init.log
+/opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql
 
 # 过滤初始密码
-mysql_passwd=$(grep "password" /data/mysql/init.log | awk -F' ' '{print $11}')
+mysql_passwd=$(grep "password" /data/mysql/mysql.err | awk -F' ' '{print $11}')
 
 # 创建SSL证书
+mkdir -p /opt/mysql/ca-pem/
 /opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
+
+cat >> /data/mysql/init_file.sql <<EOF
+set global sql_safe_updates=0;
+set global sql_select_limit=50000;
+EOF
 
 # 启动服务
 /etc/init.d/mysqld start
 
 # 修改初始密码
-/opt/mysql/bin/mysqladmin -uroot -p'${mysql_passwd}' password 'iloveyou'
+/opt/mysql/bin/mysqladmin -uroot -p${mysql_passwd} password 'iloveyou'
+
+# 客户端环境变量
+echo "export PATH=\$PATH:/opt/mysql/bin" | tee -a /etc/profile
+source /etc/profile
