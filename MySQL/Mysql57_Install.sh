@@ -22,6 +22,22 @@ sed -i '47s#datadir=#datadir=/data/mysql#' /opt/mysql/support-files/mysql.server
 cp /opt/mysql/support-files/mysql.server /etc/init.d/mysqld
 chmod 755 /etc/init.d/mysqld
 
+# 创建用户
+groupadd mysql
+useradd -r -g mysql -s /bin/false mysql
+
+# 赋予所属组
+chown -R mysql.mysql /opt/mysql/
+chown -R mysql.mysql /data/mysql
+chown -R mysql.mysql /etc/my.cnf
+chown -R mysql.mysql /etc/init.d/mysqld
+
+# 初始化
+/opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql >> /tmp/init_mysql.log
+
+# 过滤初始密码
+mysql_passwd=$(grep "password" /tmp/init_mysql.log | awk -F' ' '{print $11}')
+
 # 创建配置文件
 rm -f /etc/my.cnf
 cat >> /etc/my.cnf <<EOF
@@ -199,22 +215,6 @@ ssl-key = /opt/mysql/ca-pem/server-key.pem
 [client]
 socket                              = /data/mysql/mysql.sock
 EOF
-
-# 创建用户
-groupadd mysql
-useradd -r -g mysql -s /bin/false mysql
-
-# 赋予所属组
-chown -R mysql.mysql /opt/mysql/
-chown -R mysql.mysql /data/mysql
-chown -R mysql.mysql /etc/my.cnf
-chown -R mysql.mysql /etc/init.d/mysqld
-
-# 初始化
-/opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql
-
-# 过滤初始密码
-mysql_passwd=$(grep "password" /data/mysql/mysql.err | awk -F' ' '{print $11}')
 
 # 创建SSL证书
 mkdir -p /opt/mysql/ca-pem/
