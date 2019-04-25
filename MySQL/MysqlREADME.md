@@ -8,7 +8,8 @@ visudo
 ```
 cd /opt
 chmod 755 Mysql57_Install.sh
-./Mysql57_Install.sh
+su admin
+sh Mysql57_Install.sh
 ```
 
 ## 2. MySQL5.6.28 通用二进制包安装
