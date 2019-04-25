@@ -229,6 +229,7 @@ sudo bash -c "cat > /data/mysql/init_file.sql" <<EOF
 set global sql_safe_updates=0;
 set global sql_select_limit=50000;
 EOF
+sudo chown -R mysql.mysql /data/mysql/init_file.sql
 sudo chown -R mysql.mysql /etc/init.d/mysqld
 
 # 启动服务
