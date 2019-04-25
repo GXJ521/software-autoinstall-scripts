@@ -7,12 +7,11 @@
 # Version: v1.0
 #*****************************************************************************************
 
+t
 # 使用root用户将普通用户添加至visudo密码。
 # visudo 
 # admin   ALL=(ALL)       NOPASSWD:ALL
 # admin 为普通用户
-
-USER=`whoami`
 
 # 安装依赖
 sudo yum install libaio -y
@@ -36,18 +35,17 @@ sudo useradd -r -g mysql -s /bin/false mysql
 # 赋予所属组
 sudo chown -R mysql.mysql /opt/mysql/
 sudo chown -R mysql.mysql /data/mysql
-sudo chown -R mysql.mysql /etc/my.cnf
 sudo chown -R mysql.mysql /etc/init.d/mysqld
 
 # 初始化
-sudo opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql 2>&1 | tee -a /tmp/init_mysql.log
+sudo /opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql 2>&1 | tee -a /tmp/init_mysql.log
 
 # 过滤初始密码
 mysql_passwd=$(grep "password" /tmp/init_mysql.log | awk -F' ' '{print $11}')
 
 # 创建配置文件
 sudo rm -f /etc/my.cnf
-sudo cat >> /etc/my.cnf <<EOF
+sudo bash -c "cat > /etc/my.cnf" <<EOF
 [mysqld]
 #************** basic ***************
 datadir                             = /data/mysql
@@ -223,11 +221,13 @@ ssl-key = /opt/mysql/ca-pem/server-key.pem
 socket                              = /data/mysql/mysql.sock
 EOF
 
+sudo chown -R mysql.mysql /etc/my.cnf
+
 # 创建SSL证书
 sudo mkdir -p /opt/mysql/ca-pem/
 sudo /opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
 
-sudo cat >> /data/mysql/init_file.sql <<EOF
+sudo bash -c "cat > /data/mysql/init_file.sql" <<EOF
 set global sql_safe_updates=0;
 set global sql_select_limit=50000;
 EOF
