@@ -7,40 +7,47 @@
 # Version: v1.0
 #*****************************************************************************************
 
+# 使用root用户将普通用户添加至visudo密码。
+# visudo 
+# admin   ALL=(ALL)       NOPASSWD:ALL
+# admin 为普通用户
+
+USER=`whoami`
+
 # 安装依赖
-yum install libaio -y
+sudo yum install libaio -y
 
 # 下载解压创建目录
-curl -o /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz http://file.mrlapulga.com/Mysql/software/generic/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
-tar -zxf /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz -C /opt
-ln -sv /opt/mysql-5.7.24-linux-glibc2.12-x86_64 /opt/mysql
-mkdir -p /data/mysql
+sudo curl -o /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz http://file.mrlapulga.com/Mysql/software/generic/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
+sudo tar -zxf /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz -C /opt
+sudo ln -sv /opt/mysql-5.7.24-linux-glibc2.12-x86_64 /opt/mysql
+sudo mkdir -p /data/mysql
 
 # 修改启动脚本
-sed -i '46s#basedir=#basedir=/opt/mysql#' /opt/mysql/support-files/mysql.server
-sed -i '47s#datadir=#datadir=/data/mysql#' /opt/mysql/support-files/mysql.server
-cp /opt/mysql/support-files/mysql.server /etc/init.d/mysqld
-chmod 755 /etc/init.d/mysqld
+sudo sed -i '46s#basedir=#basedir=/opt/mysql#' /opt/mysql/support-files/mysql.server
+sudo sed -i '47s#datadir=#datadir=/data/mysql#' /opt/mysql/support-files/mysql.server
+sudo cp /opt/mysql/support-files/mysql.server /etc/init.d/mysqld
+sudo chmod 755 /etc/init.d/mysqld
 
 # 创建用户
-groupadd mysql
-useradd -r -g mysql -s /bin/false mysql
+sudo groupadd mysql
+sudo useradd -r -g mysql -s /bin/false mysql
 
 # 赋予所属组
-chown -R mysql.mysql /opt/mysql/
-chown -R mysql.mysql /data/mysql
-chown -R mysql.mysql /etc/my.cnf
-chown -R mysql.mysql /etc/init.d/mysqld
+sudo chown -R mysql.mysql /opt/mysql/
+sudo chown -R mysql.mysql /data/mysql
+sudo chown -R mysql.mysql /etc/my.cnf
+sudo chown -R mysql.mysql /etc/init.d/mysqld
 
 # 初始化
-/opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql >> /tmp/init_mysql.log
+sudo opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql 2>&1 | tee -a /tmp/init_mysql.log
 
 # 过滤初始密码
 mysql_passwd=$(grep "password" /tmp/init_mysql.log | awk -F' ' '{print $11}')
 
 # 创建配置文件
-rm -f /etc/my.cnf
-cat >> /etc/my.cnf <<EOF
+sudo rm -f /etc/my.cnf
+sudo cat >> /etc/my.cnf <<EOF
 [mysqld]
 #************** basic ***************
 datadir                             = /data/mysql
@@ -217,20 +224,20 @@ socket                              = /data/mysql/mysql.sock
 EOF
 
 # 创建SSL证书
-mkdir -p /opt/mysql/ca-pem/
-/opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
+sudo mkdir -p /opt/mysql/ca-pem/
+sudo /opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
 
-cat >> /data/mysql/init_file.sql <<EOF
+sudo cat >> /data/mysql/init_file.sql <<EOF
 set global sql_safe_updates=0;
 set global sql_select_limit=50000;
 EOF
 
 # 启动服务
-/etc/init.d/mysqld start
+sudo /etc/init.d/mysqld start
 
 # 修改初始密码
-/opt/mysql/bin/mysqladmin -uroot -p${mysql_passwd} password 'iloveyou'
+sudo /opt/mysql/bin/mysqladmin -uroot -p${mysql_passwd} password 'iloveyou'
 
 # 客户端环境变量
-echo "export PATH=\$PATH:/opt/mysql/bin" | tee -a /etc/profile
+echo "export PATH=\$PATH:/opt/mysql/bin" | sudo tee -a /etc/profile
 source /etc/profile
