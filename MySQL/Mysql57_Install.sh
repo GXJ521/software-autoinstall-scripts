@@ -31,8 +31,10 @@ sudo chmod 755 /etc/init.d/mysqld
 sudo groupadd mysql
 sudo useradd -r -g mysql -s /bin/false mysql
 
-# 赋予所属组
+# 赋予data目录和base目录普通用户组
 sudo chown -R mysql.mysql /opt/mysql/
+sudo chown -R mysql.mysql /opt/mysql
+sudo chown -R mysql.mysql /opt/mysql-5.7.24-linux-glibc2.12-x86_64
 sudo chown -R mysql.mysql /data/mysql
 
 # 初始化
