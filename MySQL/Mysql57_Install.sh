@@ -7,7 +7,6 @@
 # Version: v1.0
 #*****************************************************************************************
 
-t
 # 使用root用户将普通用户添加至visudo密码。
 # visudo 
 # admin   ALL=(ALL)       NOPASSWD:ALL
@@ -35,7 +34,6 @@ sudo useradd -r -g mysql -s /bin/false mysql
 # 赋予所属组
 sudo chown -R mysql.mysql /opt/mysql/
 sudo chown -R mysql.mysql /data/mysql
-sudo chown -R mysql.mysql /etc/init.d/mysqld
 
 # 初始化
 sudo /opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql 2>&1 | tee -a /tmp/init_mysql.log
@@ -220,17 +218,18 @@ ssl-key = /opt/mysql/ca-pem/server-key.pem
 [client]
 socket                              = /data/mysql/mysql.sock
 EOF
-
 sudo chown -R mysql.mysql /etc/my.cnf
 
 # 创建SSL证书
 sudo mkdir -p /opt/mysql/ca-pem/
 sudo /opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
+sudo chown -R mysql.mysql /opt/mysql/ca-pem/
 
 sudo bash -c "cat > /data/mysql/init_file.sql" <<EOF
 set global sql_safe_updates=0;
 set global sql_select_limit=50000;
 EOF
+sudo chown -R mysql.mysql /etc/init.d/mysqld
 
 # 启动服务
 sudo /etc/init.d/mysqld start
