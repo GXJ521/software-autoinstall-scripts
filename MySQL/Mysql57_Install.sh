@@ -47,14 +47,14 @@ mysql_passwd=$(grep "password" /tmp/init_mysql.log | awk -F' ' '{print $11}')
 sudo rm -f /etc/my.cnf
 sudo bash -c "cat > /etc/my.cnf" <<EOF
 [mysqld]
-#************** basic ***************
+#****************************** basic ******************************
 datadir                             = /data/mysql
 basedir                             = /opt/mysql
 port                                = 3306
 socket                              = /data/mysql/mysql.sock
 pid_file                            = /data/mysql/mysql.pid
 
-#************** connection ***************
+#****************************** connection ******************************
 max_connections                     = 30000
 max_connect_errors                  = 100000
 max_user_connections                = 6000
@@ -63,7 +63,7 @@ mysql_native_password_proxy_users   = on
 local_infile                        = OFF
 symbolic-links                      = FALSE
 
-#************** sql timeout & limits ***************
+#****************************** sql timeout & limits ******************************
 max_join_size                       = 1000000
 max_execution_time                  = 10000
 lock_wait_timeout                   = 60
@@ -88,7 +88,7 @@ sql_mode                            = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 init_file                           = /data/mysql/init_file.sql
 #init_slave
 
-#******************* err & slow & general ***************
+#****************************** err & slow & general ******************************
 log_error                               = /data/mysql/mysql.err
 #log_output                             = "TABLE,FILE"
 slow_query_log                          = ON
@@ -99,7 +99,7 @@ log_throttle_queries_not_using_indexes  = 10
 general_log                             = OFF
 general_log_file                        = /data/mysql/general.log
 
-#************** binlog & relaylog ***************
+#****************************** binlog & relaylog ******************************
 expire_logs_days                    = 99
 sync_binlog                         = 1
 #log-bin                            = /data/mysql/blog/mysql-bin
@@ -117,7 +117,7 @@ max_relay_log_size                  = 500M
 relay_log_purge                     = ON
 relay_log_recovery                  = ON
 
-#*************** rpl_semi_sync ***************
+#****************************** rpl_semi_sync ******************************
 #rpl_semi_sync_master_enabled                = ON
 #rpl_semi_sync_master_timeout                = 1000
 #rpl_semi_sync_master_trace_level            = 32
@@ -127,17 +127,17 @@ relay_log_recovery                  = ON
 #rpl_semi_sync_slave_enabled                 = ON
 #rpl_semi_sync_slave_trace_level             = 32
 
-#*************** group commit ***************
+#****************************** group commit ******************************
 #binlog_group_commit_sync_delay              =1
 #binlog_group_commit_sync_no_delay_count     =1000
 
-#*************** gtid ***************
+#****************************** gtid ******************************
 #gtid_mode                          = ON
 #enforce_gtid_consistency           = ON
 #master_verify_checksum             = ON
 #sync_master_info                   = 1
 
-#*************slave ***************
+#****************************** slave ******************************
 #skip-slave-start                   = 1
 ##read_only                         = ON
 ##super_read_only                   = ON
@@ -149,13 +149,13 @@ relay_log_recovery                  = ON
 #slave_sql_verify_checksum          = ON
 #slave_preserve_commit_order        = 1
 
-#*************** muti thread slave ***************
+#****************************** muti thread slave ******************************
 #slave_parallel_type                = LOGICAL_CLOCK
 #slave_parallel_workers             = 4
 #master_info_repository             = TABLE
 #relay_log_info_repository          = TABLE
 
-#*************** buffer & timeout ***************
+#****************************** buffer & timeout ******************************
 read_buffer_size                    = 1M
 read_rnd_buffer_size                = 2M
 sort_buffer_size                    = 1M
@@ -169,7 +169,7 @@ interactive_timeout                 = 600
 net_read_timeout                    = 30
 net_write_timeout                   = 30
 
-#*********** myisam ***************
+#****************************** myisam ******************************
 skip_external_locking               = ON
 key_buffer_size                     = 16M
 bulk_insert_buffer_size             = 16M
@@ -178,7 +178,7 @@ open_files_limit                    = 65000
 table_open_cache                    = 16000
 table_definition_cache              = 16000
 
-#*********** innodb ***************
+#****************************** innodb ******************************
 default_storage_engine              = InnoDB
 default_tmp_storage_engine          = InnoDB
 internal_tmp_disk_storage_engine    = InnoDB
@@ -212,7 +212,8 @@ innodb_thread_concurrency           = 24
 innodb_sort_buffer_size             = 64M
 innodb_print_all_deadlocks          = 1
 innodb_rollback_on_timeout          = ON
-#************** safe ***************
+
+#****************************** safe ******************************
 ssl-ca = /opt/mysql/ca-pem/ca.pem
 ssl-cert = /opt/mysql/ca-pem/server-cert.pem
 ssl-key = /opt/mysql/ca-pem/server-key.pem
