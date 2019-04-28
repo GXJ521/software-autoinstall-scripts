@@ -12,6 +12,8 @@
 # admin   ALL=(ALL)       NOPASSWD:ALL
 # admin 为普通用户
 
+Mysql_Install () {
+
 # 安装依赖
 sudo yum install libaio -y
 
@@ -244,3 +246,7 @@ sudo /opt/mysql/bin/mysqladmin -uroot -p${mysql_passwd} password 'iloveyou'
 # 客户端环境变量
 echo "export PATH=\$PATH:/opt/mysql/bin" | sudo tee -a /etc/profile
 source /etc/profile
+
+}
+
+Mysql_Install
