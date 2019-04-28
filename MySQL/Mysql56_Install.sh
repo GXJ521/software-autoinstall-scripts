@@ -95,7 +95,7 @@ sudo chown -R ${USER}.${USER} /etc/my.cnf
 
 # 启动mysql
 echo -e "*-----启动mysql-----*" 
-/etc/init.d/mysqld start
+sudo /etc/init.d/mysqld start
 
 # 修改密码
 sudo /opt/mysql/bin/mysqladmin -uroot password ")&09@zzy.com"
