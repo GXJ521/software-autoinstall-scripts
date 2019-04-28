@@ -13,15 +13,13 @@ Mysql_Install () {
 sudo curl -o /opt/mysql-5.6.40-linux-glibc2.12-x86_64.tar.gz http://file.mrlapulga.com/Mysql/software/generic/mysql-5.6.40-linux-glibc2.12-x86_64.tar.gz
 
 # 设置变量
+source /etc/init.d/functions
 MYSQL_PKG_PATH='/opt/mysql-5.6.40-linux-glibc2.12-x86_64.tar.gz'
-DEPLOY_PATH='/opt/'
-USER=`whoami`
+DEPLOY_PATH='/opt'
+USER=mysql
 
 # 准备
 echo -e "*-----准备安装mysql-----*" 
-if [ ${USER} = "root" ];then
-    USER=mysql
-fi
 sudo useradd mysql -s /sbin/nologin -M
 sudo mkdir -p /data/mysql
 sudo tar xf ${MYSQL_PKG_PATH} -C ${DEPLOY_PATH} 
@@ -29,6 +27,28 @@ sudo ln -sv  ${DEPLOY_PATH}/mysql-5.6.40-linux-glibc2.12-x86_64 ${DEPLOY_PATH}/m
 sudo chown -R ${USER}.${USER} ${DEPLOY_PATH}/mysql
 sudo chown -R ${USER}.${USER} ${DEPLOY_PATH}/mysql/
 sudo chown -R ${USER}.${USER} /data/mysql
+
+# 初始化
+cd ${DEPLOY_PATH}/mysql
+sudo scripts/mysql_install_db --user=${USER} --basedir=${DEPLOY_PATH}/mysql --datadir=/data/mysql &>/dev/null 
+sudo chown -R ${USER}.${USER} /data/mysql
+if [ $? -eq 0 ];then
+    action "*-----初始化Mysql-----*"   /bin/true
+else
+    action "*-----初始化Mysql-----*"   /bin/false
+fi
+
+# 配置启动脚本
+sudo ln -s /opt/mysql/bin/mysql /usr/bin/ 
+sudo sed -i '46s#basedir=#basedir=/opt/mysql#' support-files/mysql.server
+sudo sed -i '47s#datadir=#datadir=/data/mysql#' support-files/mysql.server
+sudo sed -i 's#basedir=/usr/local/mysql#basedir=/opt/mysql#' support-files/mysql.server
+sudo sed -i 's#sbindir=/usr/local/mysql/bin#sbindir=/opt/mysql/bin#' support-files/mysql.server
+sudo sed -i 's#bindir=/usr/local/mysql/bin#bindir=/opt/mysql/bin#' support-files/mysql.server
+sudo sed -i 's#datadir=/usr/local/mysql/data#datadir=/data/mysql#' support-files/mysql.server
+sudo sed -i 's#libexecdir=/usr/local/mysql/bin#libexecdir=/opt/mysql/bin#' support-files/mysql.server
+sudo \cp support-files/mysql.server /etc/init.d/mysqld 
+sudo chown -R ${USER}.${USER} /etc/init.d/mysqld
 
 # 配置文件
 sudo rm -f /etc/my.cnf
@@ -71,28 +91,7 @@ lower_case_table_names = 1
 skip-name-resolve
 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 EOF
-sudo chown -R $USER{}.${USER} /etc/my.cnf
-
-# 初始化
-cd ${DEPLOY_PATH}/mysql
-sudo scripts/mysql_install_db --user=${USER} --basedir=${DEPLOY_PATH}/mysql --datadir=/data/mysql &>/dev/null 
-sudo chown -R ${USER}.${USER} /data/mysql
-if [ $? -eq 0 ];then
-    action "*-----初始化Mysql-----*"   /bin/true
-else
-    action "*-----初始化Mysql-----*"   /bin/false
-fi
-
-# 配置启动脚本
-sudo ln -s /opt/mysql/bin/mysql /usr/bin/ 
-sudo sed -i '46s#basedir=#basedir=/opt/mysql#' support-files/mysql.server
-sudo sed -i '47s#datadir=#datadir=/data/mysql#' support-files/mysql.server
-sudo sed -i 's#basedir=/usr/local/mysql#basedir=/opt/mysql#' support-files/mysql.server
-sudo sed -i 's#sbindir=/usr/local/mysql/bin#sbindir=/opt/mysql/bin#' support-files/mysql.server
-sudo sed -i 's#bindir=/usr/local/mysql/bin#bindir=/opt/mysql/bin#' support-files/mysql.server
-sudo sed -i 's#datadir=/usr/local/mysql/data#datadir=/data/mysql#' support-files/mysql.server
-sudo sed -i 's#libexecdir=/usr/local/mysql/bin#libexecdir=/opt/mysql/bin#' support-files/mysql.server
-sudo \cp support-files/mysql.server /etc/init.d/mysqld 
+sudo chown -R ${USER}.${USER} /etc/my.cnf
 
 # 启动mysql
 echo -e "*-----启动mysql-----*" 
