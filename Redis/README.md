@@ -3,7 +3,7 @@
 ```bash
 cd /opt/redis_double
 ./redisha_install.sh 
-create public key ,please input slave host ip: 192.168.3.176
+create public key ,please input slave host ip: 192.168.3.176    # 这里需要输入从机IP地址
 Generating public/private rsa key pair.
 Your identification has been saved in /root/.ssh/id_dsa.
 Your public key has been saved in /root/.ssh/id_dsa.pub.
@@ -45,9 +45,9 @@ Please input mask(numbers): 24
 ```bash
 cd /opt/redis_cluster
 ./Redis_Cluster_Install.sh 
-Please input node1 ip: 192.168.3.171
-Please input node2 ip: 192.168.3.170
-Please input node3 ip: 192.168.3.169
+Please input node1 ip: 192.168.3.171    # 这里输入本机IP地址
+Please input node2 ip: 192.168.3.170    # 这里输入从机节点1的IP地址
+Please input node3 ip: 192.168.3.169    # 这里输入从机节点2的IP地址
 Generating public/private rsa key pair.
 Created directory '/root/.ssh'.
 Your identification has been saved in /root/.ssh/id_dsa.
@@ -73,7 +73,7 @@ ECDSA key fingerprint is MD5:f9:20:fe:13:99:bf:d7:99:60:61:3b:00:74:b4:ec:e8.
 Are you sure you want to continue connecting (yes/no)? yes
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-root@192.168.3.170's password: 输入密码
+root@192.168.3.170's password:    # 输入从机节点1的密码
 
 Number of key(s) added: 1
 
@@ -87,7 +87,7 @@ ECDSA key fingerprint is MD5:8b:b2:56:3b:5d:13:c3:9a:39:c5:3a:fa:2b:54:0e:f5.
 Are you sure you want to continue connecting (yes/no)? yes
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-root@192.168.3.169's password: 输入密码
+root@192.168.3.169's password:    # 输入从机节点2的密码
 
 Number of key(s) added: 1
 
