@@ -7,15 +7,8 @@ cd /opt/Zookeeper_Pseudo_Cluster
 ```
 ```bash
 success
-success
-success
-success
-success
-success
-success
-success
-success
-success
+...    # 忽略多个success，这是在设置防火墙
+
 *-----启动zookeeper节点1-----*
 *-----zookeeper节点1启动成功-----*
 *-----启动zookeeper节点2-----*
@@ -79,8 +72,8 @@ Now try logging into the machine, with:   "ssh 'root@192.168.3.169'"
 and check to make sure that only the key(s) you wanted were added.
 
 success
-success
-success
+...    # 忽略多个success，这是在设置防火墙
+
 *-----启动zookeeper节点1-----*
 *-----zookeeper节点1启动成功-----*
 *-----启动zookeeper节点2-----*
