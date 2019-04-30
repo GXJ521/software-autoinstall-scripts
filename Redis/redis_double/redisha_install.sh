@@ -8,8 +8,8 @@
 #*****************************************************************************************
 
 read -p "create public key ,please input slave host ip: " SLAVE_IP
-ssh-keygen -t rsa -P '' -f ~/.ssh/id_dsa
-ssh-copy-id -i ~/.ssh/id_dsa.pub root@${SLAVE_IP}
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@${SLAVE_IP}
 
 Var_Read () {
 MASTERIP=`ip addr | grep inet | grep -vE 'inet6 | 127.0.0.1' | awk '{print $2}' | awk -F '/' '{print $1}' | sed -n '1p'`
