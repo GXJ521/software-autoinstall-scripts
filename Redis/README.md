@@ -5,8 +5,8 @@ cd /opt/redis_double
 ./redisha_install.sh 
 create public key ,please input slave host ip: 192.168.3.176    # 这里需要输入从机IP地址
 Generating public/private rsa key pair.
-Your identification has been saved in /root/.ssh/id_dsa.
-Your public key has been saved in /root/.ssh/id_dsa.pub.
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
 The key fingerprint is:
 SHA256:EOuLiWURyxyN5syZrF+uAa45h4FcZRecDPBqaOn0/GM root@redis-slave
 The key's randomart image is:
@@ -21,7 +21,7 @@ The key's randomart image is:
 |oo. oE.          |
 |oo  oo.          |
 +----[SHA256]-----+
-/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_dsa.pub"
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
 The authenticity of host '192.168.3.176 (192.168.3.176)' can't be established.
 ECDSA key fingerprint is SHA256:osY7nzvy67fueEnsw8yGYHHlpThnpy17BNVDTj4TPF0.
 ECDSA key fingerprint is MD5:4e:49:5a:bb:90:19:67:97:6d:1c:c0:5e:a2:6d:70:a4.
@@ -50,8 +50,8 @@ Please input node2 ip: 192.168.3.170    # 这里输入从机节点1的IP地址
 Please input node3 ip: 192.168.3.169    # 这里输入从机节点2的IP地址
 Generating public/private rsa key pair.
 Created directory '/root/.ssh'.
-Your identification has been saved in /root/.ssh/id_dsa.
-Your public key has been saved in /root/.ssh/id_dsa.pub.
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
 The key fingerprint is:
 SHA256:k/Jysqf1OK6Re5vIJbed8/ir9mTZf1EclE1lnoBdc30 root@redis-cluster-01
 The key's randomart image is:
@@ -66,7 +66,7 @@ The key's randomart image is:
 |     . &+*o=   ..|
 |      B**+**=.  o|
 +----[SHA256]-----+
-/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_dsa.pub"
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
 The authenticity of host '192.168.3.170 (192.168.3.170)' can't be established.
 ECDSA key fingerprint is SHA256:Mc7hBWOjfC+KevMZ7jBLudz3ewk/xBlpPTPT9nWWi8c.
 ECDSA key fingerprint is MD5:f9:20:fe:13:99:bf:d7:99:60:61:3b:00:74:b4:ec:e8.
@@ -80,7 +80,7 @@ Number of key(s) added: 1
 Now try logging into the machine, with:   "ssh 'root@192.168.3.170'"
 and check to make sure that only the key(s) you wanted were added.
 
-/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_dsa.pub"
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
 The authenticity of host '192.168.3.169 (192.168.3.169)' can't be established.
 ECDSA key fingerprint is SHA256:DVBhAr3zUOj2IC+B/YyA6ONDDKskGL6SK95hrVfX6eg.
 ECDSA key fingerprint is MD5:8b:b2:56:3b:5d:13:c3:9a:39:c5:3a:fa:2b:54:0e:f5.
