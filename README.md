@@ -4,7 +4,7 @@
 ```
 
 **Linux Service Auto Install Scripts**
-- [Redis](https://github.com/mrlapulga/DevOps/blob/master/Redis/README.md)
+- [Redis](https://github.com/mrlapulga/devops-software-install-scripts/tree/master/Redis)
 - [Zookeeper](https://github.com/mrlapulga/DevOps/blob/master/Zookeeper/README.md)
 - [MySQL](https://github.com/mrlapulga/devops-shellscripts/blob/master/MySQL/README.md)
 
