@@ -18,9 +18,9 @@ echo "NODE2_IP:${NODE2_IP}" > /opt/redis_cluster/redisnode2/conf/node2_ip.txt
 echo "NODE3_IP:${NODE3_IP}" > /opt/redis_cluster/redisnode3/conf/node3_ip.txt
 
 # 免密
-ssh-keygen -t rsa -P '' -f ~/.ssh/id_dsa
-ssh-copy-id -i ~/.ssh/id_dsa.pub root@${NODE2_IP}
-ssh-copy-id -i ~/.ssh/id_dsa.pub root@${NODE3_IP}
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@${NODE2_IP}
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@${NODE3_IP}
 
 # 将部署包及脚本远程传至相应节点服务器
 ssh root@${NODE2_IP} bash -c "'mkdir -p /opt/redis_cluster'"
