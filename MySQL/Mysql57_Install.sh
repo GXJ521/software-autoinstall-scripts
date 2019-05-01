@@ -230,7 +230,7 @@ sudo mkdir -p /opt/mysql/ca-pem/
 sudo /opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
 sudo chown -R mysql.mysql /opt/mysql/ca-pem/
 
-sudo bash -c "cat > /data/mysql/init_file.sql" <<EOF
+sudo bash -c "cat >> /data/mysql/init_file.sql" <<EOF
 set global sql_safe_updates=0;
 set global sql_select_limit=50000;
 EOF
