@@ -52,7 +52,7 @@ sudo chown -R ${USER}.${USER} /etc/init.d/mysqld
 
 # 配置文件
 sudo rm -f /etc/my.cnf
-sudo bash -c "cat > /etc/my.cnf" <<EOF
+sudo bash -c "cat >> /etc/my.cnf" <<EOF
 [mysqld]
 lower_case_table_names = 1
 default-storage-engine = InnoDB
