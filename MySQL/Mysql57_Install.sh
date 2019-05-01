@@ -47,7 +47,7 @@ mysql_passwd=$(grep "password" /tmp/init_mysql.log | awk -F' ' '{print $11}')
 
 # 创建配置文件
 sudo rm -f /etc/my.cnf
-sudo bash -c "cat > /etc/my.cnf" <<EOF
+sudo bash -c "cat >> /etc/my.cnf" <<EOF
 [mysqld]
 #****************************** basic ******************************
 datadir                             = /data/mysql
