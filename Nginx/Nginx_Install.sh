@@ -12,7 +12,7 @@ User=`whoami`
 
 Nginx_Install () {
     echo '*-----安装Nginx-----*'
-    sudo rpm -ivh 
+    sudo rpm -ivh nginx-1.14.2-1.el7_4.ngx.x86_64.rpm
     sudo mkdir -p /var/log/nginx/ && sudo chown -R ${User}.${User} /var/log/nginx
     sudo mkdir -p /var/run/nginx/ && sudo chown -R ${User}.${User} /var/run/nginx/
     sudo mkdir -p /var/cache/nginx/ && sudo chown -R ${User}.${User} /var/cache/nginx/
