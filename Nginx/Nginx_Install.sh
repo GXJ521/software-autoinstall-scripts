@@ -1,11 +1,18 @@
 #!/bin/bash
-
+#*****************************************************************************************
+# Filename: Nginx_Install.sh
+# Create by: mrlapulga@126.com
+# Create Data: 2019-06-21
+# Usage: sh Nginx_Install.sh
+# Version: v1.0
+#*****************************************************************************************
 
 . /etc/init.d/functions
 User=`whoami`
 
 Nginx_Install () {
     echo '*-----安装Nginx-----*'
+    sudo rpm -ivh 
     sudo mkdir -p /var/log/nginx/ && sudo chown -R ${User}.${User} /var/log/nginx
     sudo mkdir -p /var/run/nginx/ && sudo chown -R ${User}.${User} /var/run/nginx/
     sudo mkdir -p /var/cache/nginx/ && sudo chown -R ${User}.${User} /var/cache/nginx/
