@@ -9,5 +9,6 @@
 - [MySQL](https://github.com/mrlapulga/devops-software-install-scripts/tree/master/MySQL)
 - [Openssh_Upgrade](https://github.com/mrlapulga/software-autoinstall-scripts/tree/master/Upgrade_Openssh)
 - [Sqlplus](https://github.com/mrlapulga/software-autoinstall-scripts/tree/master/Sqlplus_Install)
+- [Nginx](https://github.com/mrlapulga/software-autoinstall-scripts/tree/master/Nginx)
 
 
