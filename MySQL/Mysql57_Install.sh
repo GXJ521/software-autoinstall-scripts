@@ -265,3 +265,5 @@ fi
 echo "export PATH=\$PATH:${Deploy_path}/mysql/bin" | sudo tee /etc/profile.d/mysql2.sh
 source /etc/profile.d/mysql2.sh
 }
+
+Mysql_Install 
