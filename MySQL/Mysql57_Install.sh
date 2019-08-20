@@ -7,55 +7,71 @@
 # Version: v1.0
 #*****************************************************************************************
 
-# 使用root用户将普通用户添加至visudo免密。
-# visudo 
-# admin   ALL=(ALL)       NOPASSWD:ALL
-# admin 为普通用户
-
 Mysql_Install () {
 
 # 安装依赖
 sudo yum install libaio -y
 
+BASE_DIR=`pwd`
+Mysql_pkg_path=$BASE_DIR/mysql-5.7.26-linux-glibc2.12-x86_64.tar.gz
+Deploy_path='/opt'
+USER=`whoami`
+GROUP=`groups`
+
 # 下载解压创建目录
-sudo curl -o /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz http://file.mrlapulga.com/Mysql/software/generic/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
-sudo tar -zxf /opt/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz -C /opt
-sudo ln -sv /opt/mysql-5.7.24-linux-glibc2.12-x86_64 /opt/mysql
+sudo tar xf ${Mysql_pkg_path} -C ${Deploy_path}/ 
+if [ -d ${Deploy_path}/mysql ]
+then
+    rm -rf ${Deploy_path}/mysql
+fi
+sudo mv ${Deploy_path}/mysql-5.7.26-linux-glibc2.12-x86_64 ${Deploy_path}/mysql 
+if [ -d /data/mysql ]
+then
+    rm -rf /data/mysql
+fi
 sudo mkdir -p /data/mysql
 
 # 修改启动脚本
-sudo sed -i '46s#basedir=#basedir=/opt/mysql#' /opt/mysql/support-files/mysql.server
-sudo sed -i '47s#datadir=#datadir=/data/mysql#' /opt/mysql/support-files/mysql.server
-sudo cp /opt/mysql/support-files/mysql.server /etc/init.d/mysqld
+sudo sed -i '46s#basedir=#basedir=/opt/mysql#' ${Deploy_path}/mysql/support-files/mysql.server
+sudo sed -i '47s#datadir=#datadir=/data/mysql#' ${Deploy_path}/mysql/support-files/mysql.server
+sudo sed -i "375aLimitNOFILE=infinity\nLimitMEMLOCK=infinity\n" ${Deploy_path}/mysql/support-files/mysql.server
+sudo cp ${Deploy_path}/mysql/support-files/mysql.server /etc/init.d/mysqld
 sudo chmod 755 /etc/init.d/mysqld
 
 # 创建用户
-sudo groupadd mysql
-sudo useradd -r -g mysql -s /bin/false mysql
+if ! grep -q '^mysql:' /etc/group
+then
+    sudo groupadd mysql
+fi
+
+if ! grep -q '^mysql:' /etc/passwd
+then
+    sudo useradd -r -g mysql -s /bin/false mysql
+fi
 
 # 赋予data目录和base目录普通用户组
-sudo chown -R mysql.mysql /opt/mysql/
-sudo chown -R mysql.mysql /opt/mysql
-sudo chown -R mysql.mysql /opt/mysql-5.7.24-linux-glibc2.12-x86_64
-sudo chown -R mysql.mysql /data/mysql
+sudo chown -R ${USER}.${GROUP} ${Deploy_path}/mysql/
+sudo chown -R ${USER}.${GROUP} /data/mysql
 
-# 初始化
-sudo /opt/mysql/bin/mysqld --initialize --user=mysql --basedir=/opt/mysql --datadir=/data/mysql 2>&1 | tee -a /tmp/init_mysql.log
 
-# 过滤初始密码
-mysql_passwd=$(grep "password" /tmp/init_mysql.log | awk -F' ' '{print $11}')
+if [ ! -f /usr/bin/mysql ]
+then
+    sudo ln -s /opt/mysql/bin/mysql /usr/bin/
+fi
 
 # 创建配置文件
-sudo rm -f /etc/my.cnf
+if [ -f /etc/my.cnf ]
+then
+    sudo rm -f /etc/my.cnf
+fi
 sudo bash -c "cat >> /etc/my.cnf" <<EOF
 [mysqld]
 #****************************** basic ******************************
 datadir                             = /data/mysql
-basedir                             = /opt/mysql
+basedir                             = ${Deploy_path}/mysql
 port                                = 3306
 socket                              = /data/mysql/mysql.sock
 pid_file                            = /data/mysql/mysql.pid
-
 #****************************** connection ******************************
 max_connections                     = 30000
 max_connect_errors                  = 100000
@@ -64,7 +80,6 @@ check_proxy_users                   = on
 mysql_native_password_proxy_users   = on
 local_infile                        = OFF
 symbolic-links                      = FALSE
-
 #****************************** sql timeout & limits ******************************
 max_join_size                       = 1000000
 max_execution_time                  = 10000
@@ -87,9 +102,8 @@ query_cache_size                    = 0
 init_connect                        = "set names utf8"
 #sql_mode                           = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO
 sql_mode                            = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-init_file                           = /data/mysql/init_file.sql
+#init_file                           = /data/mysql/init_file.sql
 #init_slave
-
 #****************************** err & slow & general ******************************
 log_error                               = /data/mysql/mysql.err
 #log_output                             = "TABLE,FILE"
@@ -100,7 +114,6 @@ log_queries_not_using_indexes           = ON
 log_throttle_queries_not_using_indexes  = 10
 general_log                             = OFF
 general_log_file                        = /data/mysql/general.log
-
 #****************************** binlog & relaylog ******************************
 expire_logs_days                    = 99
 sync_binlog                         = 1
@@ -118,7 +131,6 @@ max_binlog_stmt_cache_size          = 2G
 max_relay_log_size                  = 500M
 relay_log_purge                     = ON
 relay_log_recovery                  = ON
-
 #****************************** rpl_semi_sync ******************************
 #rpl_semi_sync_master_enabled                = ON
 #rpl_semi_sync_master_timeout                = 1000
@@ -128,17 +140,14 @@ relay_log_recovery                  = ON
 #rpl_semi_sync_master_wait_point             = AFTER_SYNC
 #rpl_semi_sync_slave_enabled                 = ON
 #rpl_semi_sync_slave_trace_level             = 32
-
 #****************************** group commit ******************************
 #binlog_group_commit_sync_delay              =1
 #binlog_group_commit_sync_no_delay_count     =1000
-
 #****************************** gtid ******************************
 #gtid_mode                          = ON
 #enforce_gtid_consistency           = ON
 #master_verify_checksum             = ON
 #sync_master_info                   = 1
-
 #****************************** slave ******************************
 #skip-slave-start                   = 1
 ##read_only                         = ON
@@ -150,13 +159,11 @@ relay_log_recovery                  = ON
 #slave_load_tmpdir                  = /msdata/db_mysql/tmp
 #slave_sql_verify_checksum          = ON
 #slave_preserve_commit_order        = 1
-
 #****************************** muti thread slave ******************************
 #slave_parallel_type                = LOGICAL_CLOCK
 #slave_parallel_workers             = 4
 #master_info_repository             = TABLE
 #relay_log_info_repository          = TABLE
-
 #****************************** buffer & timeout ******************************
 read_buffer_size                    = 1M
 read_rnd_buffer_size                = 2M
@@ -170,7 +177,6 @@ wait_timeout                        = 600
 interactive_timeout                 = 600
 net_read_timeout                    = 30
 net_write_timeout                   = 30
-
 #****************************** myisam ******************************
 skip_external_locking               = ON
 key_buffer_size                     = 16M
@@ -179,7 +185,6 @@ concurrent_insert                   = ALWAYS
 open_files_limit                    = 65000
 table_open_cache                    = 16000
 table_definition_cache              = 16000
-
 #****************************** innodb ******************************
 default_storage_engine              = InnoDB
 default_tmp_storage_engine          = InnoDB
@@ -214,39 +219,49 @@ innodb_thread_concurrency           = 24
 innodb_sort_buffer_size             = 64M
 innodb_print_all_deadlocks          = 1
 innodb_rollback_on_timeout          = ON
-
 #****************************** safe ******************************
-ssl-ca = /opt/mysql/ca-pem/ca.pem
-ssl-cert = /opt/mysql/ca-pem/server-cert.pem
-ssl-key = /opt/mysql/ca-pem/server-key.pem
-
+ssl-ca = ${Deploy_path}/mysql/ca-pem/ca.pem
+ssl-cert = ${Deploy_path}/mysql/ca-pem/server-cert.pem
+ssl-key = ${Deploy_path}/mysql/ca-pem/server-key.pem
 [client]
 socket                              = /data/mysql/mysql.sock
 EOF
-sudo chown -R mysql.mysql /etc/my.cnf
+sudo chown -R ${USER}.${GROUP} /etc/my.cnf
 
 # 创建SSL证书
-sudo mkdir -p /opt/mysql/ca-pem/
-sudo /opt/mysql/bin/mysql_ssl_rsa_setup -d /opt/mysql/ca-pem/ --uid=mysql
-sudo chown -R mysql.mysql /opt/mysql/ca-pem/
+#sudo mkdir -p ${Deploy_path}/mysql/ca-pem/
+#sudo ${Deploy_path}/mysql/bin/mysql_ssl_rsa_setup -d ${Deploy_path}/mysql/ca-pem/ --uid=mysql
+#sudo chown -R ${USER}.${GROUP} ${Deploy_path}/mysql/ca-pem/
 
-sudo bash -c "cat >> /data/mysql/init_file.sql" <<EOF
-set global sql_safe_updates=0;
-set global sql_select_limit=50000;
-EOF
-sudo chown -R mysql.mysql /data/mysql/init_file.sql
-sudo chown -R mysql.mysql /etc/init.d/mysqld
+#sudo bash -c "cat >> /data/mysql/init_file.sql" <<EOF
+#set global sql_safe_updates=0;
+#set global sql_select_limit=50000;
+#EOF
+#sudo chown -R ${USER}.${GROUP} /data/mysql/init_file.sql
+#sudo chown -R ${USER}.${GROUP} /etc/init.d/mysqld
+
+# 初始化
+${Deploy_path}/mysql/bin/mysqld --initialize --user=mysql --basedir=${Deploy_path}/mysql --datadir=/data/mysql &> /tmp/init_mysql.log
+
+# 过滤初始密码
+mysql_passwd=$(grep 'A temporary password is generated' /data/mysql/mysql.err |awk '{print $NF}')
 
 # 启动服务
-sudo /etc/init.d/mysqld start
+/etc/init.d/mysqld start
+
 
 # 修改初始密码
-sudo /opt/mysql/bin/mysqladmin -uroot -p${mysql_passwd} password 'iloveyou'
+${Deploy_path}/mysql/bin/mysqladmin -uroot -p${mysql_passwd} password ')&09@zzy.com'
+if [ $? -ne 0 ];then
+    echo "*-----初始化Mysql密码异常-----*"
+fi
 
 # 客户端环境变量
-echo "export PATH=\$PATH:/opt/mysql/bin" | sudo tee -a /etc/profile
-source /etc/profile
-
+# if ! grep -q 'mysql/bin' /etc/profile
+# then
+#     echo "export PATH=\$PATH:${Deploy_path}/mysql/bin" | sudo tee -a /etc/profile
+#     source /etc/profile
+# fi
+echo "export PATH=\$PATH:${Deploy_path}/mysql/bin" | sudo tee /etc/profile.d/mysql2.sh
+source /etc/profile.d/mysql2.sh
 }
-
-Mysql_Install
